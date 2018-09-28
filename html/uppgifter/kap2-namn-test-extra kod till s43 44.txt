@@ -1,0 +1,53 @@
+<?php
+
+/**
+ * En utf8-funktion som vänder på en textsträng
+ *
+ * Denna funktion liknar PHP:s inbyggda strrev(), men förutsätter
+ * att teckenkodningen är UTF-8 och inte Win-1252/ISO-8859-1
+ *
+ * @param string $str En UTF-8 kodad sträng
+ * @return string Strängen i omvänd ordning
+ */
+function utf8_strrev($str) {
+        // Namnet baklänges – se detta som svart magi tills vidare!
+        preg_match_all('/./us', $str, $temp_arr);
+        return join('', array_reverse($temp_arr[0]));
+}
+
+//hämta data från formuläret
+$submitted_name=filter_input(INPUT_POST, 'name', FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW);
+
+
+// en variabel som håller på reda om vi fått något användbart
+// Vi börjar med att förutsätta att så är inte fallet
+$namedata = false;
+if (!empty($submitted_name)){
+	//ta bort onödig blank i början och slutet
+	$submitted_name = trim($submitted_name);
+	//säkra namnet för HTML output, dvs omvandla HTMLchars till rena chars
+	$output_name = htmlspecialchars($submitted_name, ENT_QUOTES);
+	//antal tecken i namnet
+	$charcount = mb_strlen($submitted_name);
+	//namnet baklänges
+	$name_reversed = utf8_strrev($submitted_name);
+	// -------------------------------------
+	//säkra namnet för HTML output
+	$name_reversed = htmlspecialchars($name_reversed, ENT_QUOTES);
+	$namedata=true;
+}
+
+<?php
+if ($namedata) {
+echo <<<DATA
+	<dl>
+	<dt>Namn</dt>
+	<dd>{$output_name}</dd>
+	<dt>Antal tecken (inkl. ev mellanslag i mitten)</dt>
+	<dd>{$charcount}</dd>
+	<dt>Namnet backlänges</dt>
+	<dd>{$name_reversed}</dd>
+DATA;
+}
+?>
+

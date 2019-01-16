@@ -99,15 +99,13 @@ LI;
 	return 0 === stripos ($constnamne, 'E_' );
 	}
 }
-	
-//---- slut på koden för felhantering ----------
+// Registrera funktionen för felhantering 
+set_error_handler('handleErrors::handler');	
 
+//---- slut på koden för felhantering ----------
 
 //---- kod för Testkörning -------- 
 header ("Content-type: text/html; charset=utf-8");
-
-// Registrera funktion för felhantering 
-set_error_handler('handleErrors::handler');
 
 //---- skapa falska fel ---------
 echo "<p>A<p>";
